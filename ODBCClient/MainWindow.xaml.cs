@@ -31,7 +31,10 @@ namespace ODBCClient
         public MainWindow()
         {
             InitializeComponent();
-
+            var ODBCdrivers = GetOdbcDriverNames();
+            var DsnNames = EnumDsn();
+            cmbDSNList.ItemsSource = DsnNames;
+            cbmDriverList.ItemsSource = ODBCdrivers;
         }
 
         private void connectToDB()
@@ -55,8 +58,7 @@ namespace ODBCClient
         private void btnConnect_Click(object sender, RoutedEventArgs e)
         {
             //connectToDB();
-            var ODBCdrivers = GetOdbcDriverNames();
-            var DsnNames = EnumDsn();
+            
         }
 
 

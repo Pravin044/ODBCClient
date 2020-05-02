@@ -7,7 +7,36 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Button x:Name="btnConnect" Content="Connect" HorizontalAlignment="Left" Margin="392,35,0,0" VerticalAlignment="Top" Width="75" Click="btnConnect_Click"/>
-
-    </Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="7*"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center"  Content="Driver"/>
+            <ComboBox x:Name="cbmDriverList" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Margin="2"/>
+            <Label Grid.Row="0" Grid.Column="1" Content="Data Source" HorizontalAlignment="Center"/>
+            <ComboBox x:Name="cmbDSNList" Grid.Column="1" Grid.Row="1" Margin="2"/>
+            <Label Content="User" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center"/>
+            <TextBox x:Name="txtUser" Grid.Row="1" Grid.Column="2" Margin="2"/>
+            <Label Content="Password" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Center"/>
+            <TextBox x:Name="txtPassword" Grid.Row="1" Grid.Column="3" Margin="2"/>
+            <Button Grid.Column="4" Grid.Row="1" HorizontalAlignment="Stretch" x:Name="btnConnect" Content="Connect" Margin="4" Click="btnConnect_Click" />
+        </Grid>
+        <Grid Grid.Row="1">
+            <RichTextBox  x:Name="txtOutput" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                
+            </RichTextBox>
+        </Grid>
+      </Grid>
 </Window>
