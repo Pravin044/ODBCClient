@@ -48,7 +48,7 @@
                 <RowDefinition MaxHeight="55px" Height="1.5*"/>
                 <RowDefinition Height="8*"/>
             </Grid.RowDefinitions>
-            <Border BorderBrush="Black" BorderThickness="1px">
+            <Border x:Name="brAccess" Visibility="Collapsed" BorderBrush="Black" BorderThickness="1px">
                 <Grid Grid.Row="0" Width="750px" HorizontalAlignment="Left">
                     <Grid.RowDefinitions>
                         <RowDefinition MaxHeight="25px"/>
@@ -75,7 +75,7 @@
                 </Grid>
             </Border>
             <Grid Grid.Row="1">
-                
+                <TreeView x:Name="treeView"></TreeView>
             </Grid>
         </Grid>
       </Grid>

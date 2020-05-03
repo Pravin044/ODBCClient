@@ -47,6 +47,7 @@ namespace ODBCClient
                     {
                         MessageBox.Show("connected");
                         btnConnect.Content = "Disconnect";
+                        brAccess.Visibility = Visibility.Visible;
 
                     }
                 }
@@ -54,6 +55,7 @@ namespace ODBCClient
                 {
                     odbcCon.Close();
                     btnConnect.Content = "Connect";
+                    brAccess.Visibility = Visibility.Collapsed;
                 }
             }
             catch (Exception ex)
@@ -121,6 +123,35 @@ namespace ODBCClient
 
         private void btnGetData_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                treeView.Items.Clear();
+                dataSet = new DataSet();
+                OdbcData = new OdbcDataAdapter("select * from "+cmbTable.SelectedItem, odbcCon);
+                OdbcData.Fill(dataSet);
+                for (int i = 0; i < dataSet.Tables[0].Rows.Count; i++)
+                {
+                    TreeViewItem parentItem = new TreeViewItem();
+                    parentItem.Header = i;
+                    treeView.Items.Add(parentItem);
+                    foreach (var childItem in dataSet.Tables[0].Rows[i].ItemArray)
+                    {
+                        TreeViewItem newChild = new TreeViewItem();
+                        newChild.Header = childItem;
+                        parentItem.Items.Add(newChild);
+
+
+                    }
+
+                }
+                   
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
 
         }
 
@@ -133,6 +164,7 @@ namespace ODBCClient
                 lblTable.Visibility = Visibility.Visible;
                 cmbTable.Visibility = Visibility.Visible;
                 txtQuary.Visibility = Visibility.Collapsed;
+                getTableInfo();
             }
             else if (cmbAccessMethod.SelectedIndex==1)
             {
@@ -159,6 +191,28 @@ namespace ODBCClient
                 txtQuary.Visibility = Visibility.Collapsed;
             }
 
+        }
+
+        private void getTableInfo()
+        {
+            try
+            {
+                if (odbcCon.State.ToString() == "Open")
+                {
+                    dataSet = new DataSet();
+                    OdbcData = new OdbcDataAdapter("SELECT * FROM " + odbcCon.Database + ".INFORMATION_SCHEMA.TABLES", odbcCon);
+                    OdbcData.Fill(dataSet);
+                    for (int i = 0; i < dataSet.Tables[0].Rows.Count; i++)
+                    {
+                        cmbTable.Items.Add(dataSet.Tables[0].Rows[i].ItemArray[2]);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }
