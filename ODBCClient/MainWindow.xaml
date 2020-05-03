@@ -5,38 +5,78 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ODBCClient"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" MinHeight="450" MinWidth="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
+            <RowDefinition MaxHeight="55px" Height="1*"/>
             <RowDefinition Height="7*"/>
         </Grid.RowDefinitions>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <Label Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center"  Content="Driver"/>
-            <ComboBox x:Name="cbmDriverList" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Margin="2"/>
-            <Label Grid.Row="0" Grid.Column="1" Content="Data Source" HorizontalAlignment="Center"/>
-            <ComboBox x:Name="cmbDSNList" Grid.Column="1" Grid.Row="1" Margin="2"/>
-            <Label Content="User" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center"/>
-            <TextBox x:Name="txtUser" Grid.Row="1" Grid.Column="2" Margin="2"/>
-            <Label Content="Password" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Center"/>
-            <TextBox x:Name="txtPassword" Grid.Row="1" Grid.Column="3" Margin="2"/>
-            <Button Grid.Column="4" Grid.Row="1" HorizontalAlignment="Stretch" x:Name="btnConnect" Content="Connect" Margin="4" Click="btnConnect_Click" />
-        </Grid>
+        <Border BorderBrush="Black" BorderThickness="1px" >
+            <Grid Width="750px" HorizontalAlignment="Left">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition MaxHeight="25px"/>
+                    <RowDefinition MaxHeight="30px"/>
+                </Grid.RowDefinitions>
+                <!--<Label Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center"  Content="Driver"/>-->
+                <!--<ComboBox x:Name="cbmDriverList" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" Margin="2"/>-->
+                <Label Grid.Row="0" Grid.Column="0" Content="Data Source" HorizontalAlignment="Center"/>
+                <Grid Grid.Column="0" Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <ComboBox x:Name="cmbDSNList" Margin="2"/>
+                    <Button x:Name="btnODBCDataSource" Grid.Column="1" Margin="2" Content="...." Click="btnODBCDataSource_Click"/>
+                </Grid>
+
+                <Label Content="User" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" />
+                <TextBox x:Name="txtUser" Grid.Row="1" Grid.Column="1" Margin="2"/>
+                <Label Content="Password" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center"/>
+                <PasswordBox x:Name="txtPassword" Grid.Row="1" Grid.Column="2" Margin="2"/>
+                <Button Grid.Column="3" Grid.Row="1" HorizontalAlignment="Stretch" x:Name="btnConnect" Content="Connect" Margin="4" Click="btnConnect_Click" />
+            </Grid>
+        </Border>
+       
         <Grid Grid.Row="1">
-            <RichTextBox  x:Name="txtOutput" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition MaxHeight="55px" Height="1.5*"/>
+                <RowDefinition Height="8*"/>
+            </Grid.RowDefinitions>
+            <Border BorderBrush="Black" BorderThickness="1px">
+                <Grid Grid.Row="0" Width="750px" HorizontalAlignment="Left">
+                    <Grid.RowDefinitions>
+                        <RowDefinition MaxHeight="25px"/>
+                        <RowDefinition MaxHeight="25px"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="0.5*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Row="0" Grid.Column="0" Content="Data Access Method"  HorizontalAlignment="Center"/>
+                    <ComboBox x:Name="cmbAccessMethod" Grid.Row="1" Grid.Column="0" Margin="2" SelectionChanged="cmbAccessMethod_SelectionChanged">
+                        <ComboBoxItem >Fixed Table</ComboBoxItem>
+                        <ComboBoxItem>Dynamic Table</ComboBoxItem>
+                        <ComboBoxItem>Quary</ComboBoxItem>
+                        <ComboBoxItem>Store procedure</ComboBoxItem>
+                    </ComboBox>
+                    <Label x:Name="lblTable" Grid.Row="0" Grid.Column="1" Content="Table Select"  HorizontalAlignment="Center"/>
+                    <Label x:Name="lblQuary" Grid.Row="0" Grid.Column="1" Content="Quary" Visibility="Collapsed"  HorizontalAlignment="Center"/>
+                    <Label x:Name="lblStore" Grid.Row="0" Grid.Column="1" Content="Select Store Procedure" Visibility="Collapsed"  HorizontalAlignment="Center"/>
+                    <ComboBox x:Name="cmbTable" Grid.Row="1" Grid.Column="1"  Margin="2"/>
+                    <TextBox x:Name="txtQuary" Grid.Row="1" Grid.Column="1" Visibility="Collapsed" Margin="2"/>
+                    <Button x:Name="btnGetData" Grid.Row="1" Grid.Column="2" Content="Get Data" Click="btnGetData_Click" Margin="2"/>
+                </Grid>
+            </Border>
+            <Grid Grid.Row="1">
                 
-            </RichTextBox>
+            </Grid>
         </Grid>
       </Grid>
 </Window>

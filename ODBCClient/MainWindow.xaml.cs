@@ -24,28 +24,36 @@ namespace ODBCClient
     /// </summary>
     public partial class MainWindow : Window
     {
-        OdbcConnection odbcCon = new OdbcConnection();
-        OdbcCommand OdbcCommand = new OdbcCommand();
+        OdbcConnection odbcCon;
         OdbcDataAdapter OdbcData;
         DataSet dataSet;
         public MainWindow()
         {
             InitializeComponent();
             var ODBCdrivers = GetOdbcDriverNames();
-            var DsnNames = EnumDsn();
-            cmbDSNList.ItemsSource = DsnNames;
-            cbmDriverList.ItemsSource = ODBCdrivers;
+            cmbDSNList.ItemsSource = EnumDsn(); ;
+            //cbmDriverList.ItemsSource = ODBCdrivers;
         }
 
         private void connectToDB()
         {
             try
             {
-                odbcCon.Open();
-                if(odbcCon.State.ToString()=="Open")
+                if (btnConnect.Content.ToString().ToLower() == "connect")
                 {
-                    MessageBox.Show("connected");
+                    odbcCon = new OdbcConnection("DSN=" + cmbDSNList.SelectedItem + ";Trusted_Connection=True;USER=" + txtUser.Text + ";PASSWORD=" + txtPassword.Password);
+                    odbcCon.Open();
+                    if (odbcCon.State.ToString() == "Open")
+                    {
+                        MessageBox.Show("connected");
+                        btnConnect.Content = "Disconnect";
 
+                    }
+                }
+                else
+                {
+                    odbcCon.Close();
+                    btnConnect.Content = "Connect";
                 }
             }
             catch (Exception ex)
@@ -57,8 +65,8 @@ namespace ODBCClient
 
         private void btnConnect_Click(object sender, RoutedEventArgs e)
         {
-            //connectToDB();
-            
+            connectToDB();
+
         }
 
 
@@ -101,6 +109,56 @@ namespace ODBCClient
                     yield return name;
                 }
             }
+        }
+
+        private void btnODBCDataSource_Click(object sender, RoutedEventArgs e)
+        {
+            var process = System.Diagnostics.Process.Start(@"C:\WINDOWS\SysWOW64\odbcad32.exe.");
+            process.WaitForExit();
+            cmbDSNList.ItemsSource=null;
+            cmbDSNList.ItemsSource = EnumDsn();
+        }
+
+        private void btnGetData_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void cmbAccessMethod_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(cmbAccessMethod.SelectedIndex==0)
+            {
+                lblQuary.Visibility = Visibility.Collapsed;
+                lblStore.Visibility = Visibility.Collapsed;
+                lblTable.Visibility = Visibility.Visible;
+                cmbTable.Visibility = Visibility.Visible;
+                txtQuary.Visibility = Visibility.Collapsed;
+            }
+            else if (cmbAccessMethod.SelectedIndex==1)
+            {
+                lblQuary.Visibility = Visibility.Collapsed;
+                lblStore.Visibility = Visibility.Collapsed;
+                lblTable.Visibility = Visibility.Visible;
+                cmbTable.Visibility = Visibility.Visible;
+                txtQuary.Visibility = Visibility.Collapsed;
+            }
+            else if(cmbAccessMethod.SelectedIndex==2)
+            {
+                lblQuary.Visibility = Visibility.Visible;
+                lblStore.Visibility = Visibility.Collapsed;
+                lblTable.Visibility = Visibility.Collapsed;
+                cmbTable.Visibility = Visibility.Collapsed;
+                txtQuary.Visibility = Visibility.Visible;
+            }
+            else if(cmbAccessMethod.SelectedIndex==3)
+            {
+                lblQuary.Visibility = Visibility.Collapsed;
+                lblStore.Visibility = Visibility.Visible;
+                lblTable.Visibility = Visibility.Collapsed;
+                cmbTable.Visibility = Visibility.Visible;
+                txtQuary.Visibility = Visibility.Collapsed;
+            }
+
         }
     }
 }
