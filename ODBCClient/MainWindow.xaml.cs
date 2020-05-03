@@ -48,7 +48,8 @@ namespace ODBCClient
                         MessageBox.Show("connected");
                         btnConnect.Content = "Disconnect";
                         brAccess.Visibility = Visibility.Visible;
-
+                        ResetAllFields();
+                        VisibilityState(false);
                     }
                 }
                 else
@@ -56,6 +57,9 @@ namespace ODBCClient
                     odbcCon.Close();
                     btnConnect.Content = "Connect";
                     brAccess.Visibility = Visibility.Collapsed;
+                    ResetAllFields();
+                    VisibilityState(true);
+
                 }
             }
             catch (Exception ex)
@@ -63,6 +67,14 @@ namespace ODBCClient
 
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void VisibilityState(bool State)
+        {
+            cmbDSNList.IsEnabled = State;
+            btnODBCDataSource.IsEnabled = State;
+            txtUser.IsEnabled = State;
+            txtPassword.IsEnabled = State;
         }
 
         private void btnConnect_Click(object sender, RoutedEventArgs e)
@@ -117,7 +129,7 @@ namespace ODBCClient
         {
             var process = System.Diagnostics.Process.Start(@"C:\WINDOWS\SysWOW64\odbcad32.exe.");
             process.WaitForExit();
-            cmbDSNList.ItemsSource=null;
+            cmbDSNList.ItemsSource = null;
             cmbDSNList.ItemsSource = EnumDsn();
         }
 
@@ -126,47 +138,126 @@ namespace ODBCClient
             try
             {
                 treeView.Items.Clear();
-                dataSet = new DataSet();
-                OdbcData = new OdbcDataAdapter("select * from "+cmbTable.SelectedItem, odbcCon);
-                OdbcData.Fill(dataSet);
-                for (int i = 0; i < dataSet.Tables[0].Rows.Count; i++)
+                if(cmbAccessMethod.SelectedIndex==0)
                 {
-                    TreeViewItem parentItem = new TreeViewItem();
-                    parentItem.Header = i;
-                    treeView.Items.Add(parentItem);
-                    foreach (var childItem in dataSet.Tables[0].Rows[i].ItemArray)
-                    {
-                        TreeViewItem newChild = new TreeViewItem();
-                        newChild.Header = childItem;
-                        parentItem.Items.Add(newChild);
-
-
-                    }
-
+                    GetFixedTableData();
                 }
-                   
+                //dataSet = new DataSet();
+                ////string qaury = getQuary();
+                //string qaury = getColumsNames();
+                //OdbcData = new OdbcDataAdapter(qaury, odbcCon);
+                //OdbcData.Fill(dataSet);
+                //for (int i = 0; i < dataSet.Tables[0].Rows.Count; i++)
+                //{
+                    
+                //    foreach (var childItem in dataSet.Tables[0].Rows[i].ItemArray)
+                //    {
+                //   TreeViewItem parentItem = new TreeViewItem();
+                //    parentItem.Header = i;
+                //    treeView.Items.Add(parentItem);
+
+
+                //    }
+
+                //}
+
 
             }
             catch (Exception ex)
             {
 
-                throw;
+                Console.WriteLine(ex.Message);
             }
 
         }
 
+        private void GetFixedTableData()
+        {
+            try
+            {
+                dataSet = new DataSet();
+                string qaury = getColumsNames();
+                OdbcData = new OdbcDataAdapter(qaury, odbcCon);
+                OdbcData.Fill(dataSet);
+                for (int i = 0; i < dataSet.Tables[0].Rows.Count; i++)
+                {
+                    foreach (var childItem in dataSet.Tables[0].Rows[i].ItemArray)
+                    {
+                        TreeViewItem parentItem = new TreeViewItem();
+                        parentItem.Header = childItem;
+                        treeView.Items.Add(parentItem);
+                       DataSet dataSet1 = new DataSet();
+                        string Subqaury = "select "+childItem+ " from "+cmbTable.SelectedItem;
+                        OdbcData = new OdbcDataAdapter(Subqaury, odbcCon);
+                        OdbcData.Fill(dataSet1);
+                        for (int index = 0; index < dataSet1.Tables[0].Rows.Count; index++)
+                        {
+                            foreach (var item in dataSet1.Tables[0].Rows[index].ItemArray)
+                            {
+
+                                TreeViewItem treeChildItem = new TreeViewItem();
+                                treeChildItem.Header = item;
+                                parentItem.Items.Add(item);
+
+
+                            }
+                        }
+
+
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex);
+            }
+        }
+
+        private string getColumsNames()
+        {
+            return "select COLUMN_NAME from " + odbcCon.Database + ".INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = '"+cmbTable.SelectedItem+"'";
+        }
+
+        private string getQuary()
+        {
+            if (cmbAccessMethod.SelectedIndex == 0)
+                return "select * from " + cmbTable.SelectedItem;
+            if (cmbAccessMethod.SelectedIndex == 1)
+                return "Select * from " + cmbTable.SelectedItem;
+            if (cmbAccessMethod.SelectedIndex == 2)
+                return txtQuary.Text;
+            if (cmbAccessMethod.SelectedIndex == 3)
+                return "select * from " + cmbTable.SelectedItem;
+            return null;
+        }
+
+        private void ResetAllFields()
+        {
+            cmbAccessMethod.SelectedIndex = -1;
+            cmbTable.SelectedIndex = -1;
+            txtQuary.Text = null;
+            treeView.Items.Clear();
+        }
+
+
+
+
         private void cmbAccessMethod_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(cmbAccessMethod.SelectedIndex==0)
+            if (cmbAccessMethod.SelectedIndex == 0)
             {
                 lblQuary.Visibility = Visibility.Collapsed;
                 lblStore.Visibility = Visibility.Collapsed;
                 lblTable.Visibility = Visibility.Visible;
                 cmbTable.Visibility = Visibility.Visible;
                 txtQuary.Visibility = Visibility.Collapsed;
+                cmbTable.Items.Clear();
                 getTableInfo();
+
             }
-            else if (cmbAccessMethod.SelectedIndex==1)
+            else if (cmbAccessMethod.SelectedIndex == 1)
             {
                 lblQuary.Visibility = Visibility.Collapsed;
                 lblStore.Visibility = Visibility.Collapsed;
@@ -174,7 +265,7 @@ namespace ODBCClient
                 cmbTable.Visibility = Visibility.Visible;
                 txtQuary.Visibility = Visibility.Collapsed;
             }
-            else if(cmbAccessMethod.SelectedIndex==2)
+            else if (cmbAccessMethod.SelectedIndex == 2)
             {
                 lblQuary.Visibility = Visibility.Visible;
                 lblStore.Visibility = Visibility.Collapsed;
@@ -182,7 +273,7 @@ namespace ODBCClient
                 cmbTable.Visibility = Visibility.Collapsed;
                 txtQuary.Visibility = Visibility.Visible;
             }
-            else if(cmbAccessMethod.SelectedIndex==3)
+            else if (cmbAccessMethod.SelectedIndex == 3)
             {
                 lblQuary.Visibility = Visibility.Collapsed;
                 lblStore.Visibility = Visibility.Visible;
@@ -213,6 +304,12 @@ namespace ODBCClient
 
                 Console.WriteLine(ex.Message);
             }
+        }
+
+        private void cmbDSNList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            txtUser.Text = null;
+            txtPassword.Password = null;
         }
     }
 }
