@@ -138,9 +138,17 @@ namespace ODBCClient
             try
             {
                 treeView.Items.Clear();
-                if(cmbAccessMethod.SelectedIndex==0)
+                if (cmbAccessMethod.SelectedIndex == 0)
                 {
-                    GetFixedTableData();
+                    dataSet = new DataSet();
+                    string qaury = getColumsNames();
+                    OdbcData = new OdbcDataAdapter(qaury, odbcCon);
+                    OdbcData.Fill(dataSet);
+
+                    if (cmbEnableGrp.SelectedIndex == 0)
+                        GetFixedTableGrupData(dataSet);
+                    else
+                        getFixedTableUnGrpData(dataSet);
                 }
                 //dataSet = new DataSet();
                 ////string qaury = getQuary();
@@ -149,7 +157,7 @@ namespace ODBCClient
                 //OdbcData.Fill(dataSet);
                 //for (int i = 0; i < dataSet.Tables[0].Rows.Count; i++)
                 //{
-                    
+
                 //    foreach (var childItem in dataSet.Tables[0].Rows[i].ItemArray)
                 //    {
                 //   TreeViewItem parentItem = new TreeViewItem();
@@ -171,14 +179,49 @@ namespace ODBCClient
 
         }
 
-        private void GetFixedTableData()
+        private void getFixedTableUnGrpData(DataSet dataSet)
         {
             try
             {
-                dataSet = new DataSet();
-                string qaury = getColumsNames();
-                OdbcData = new OdbcDataAdapter(qaury, odbcCon);
-                OdbcData.Fill(dataSet);
+                for (int i = 0; i < dataSet.Tables[0].Rows.Count; i++)
+                {
+                    foreach (var childItem in dataSet.Tables[0].Rows[i].ItemArray)
+                    {
+                        TreeViewItem parentItem = new TreeViewItem();
+                        parentItem.Header = childItem + "_" + i;
+                        treeView.Items.Add(parentItem);
+                        DataSet dataSet1 = new DataSet();
+                        string Subqaury = "select " + childItem + " from " + cmbTable.SelectedItem;
+                        OdbcData = new OdbcDataAdapter(Subqaury, odbcCon);
+                        OdbcData.Fill(dataSet1);
+                        for (int index = 0; index < dataSet1.Tables[0].Rows.Count; index++)
+                        {
+                            foreach (var item in dataSet1.Tables[0].Rows[index].ItemArray)
+                            {
+
+                                TreeViewItem treeChildItem = new TreeViewItem();
+                                treeChildItem.Header = item;
+                                parentItem.Items.Add(item);
+
+
+                            }
+                        }
+
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        private void GetFixedTableGrupData(DataSet dataSet)
+        {
+            try
+            {
+                
                 for (int i = 0; i < dataSet.Tables[0].Rows.Count; i++)
                 {
                     foreach (var childItem in dataSet.Tables[0].Rows[i].ItemArray)
@@ -186,8 +229,8 @@ namespace ODBCClient
                         TreeViewItem parentItem = new TreeViewItem();
                         parentItem.Header = childItem;
                         treeView.Items.Add(parentItem);
-                       DataSet dataSet1 = new DataSet();
-                        string Subqaury = "select "+childItem+ " from "+cmbTable.SelectedItem;
+                        DataSet dataSet1 = new DataSet();
+                        string Subqaury = "select " + childItem + " from " + cmbTable.SelectedItem;
                         OdbcData = new OdbcDataAdapter(Subqaury, odbcCon);
                         OdbcData.Fill(dataSet1);
                         for (int index = 0; index < dataSet1.Tables[0].Rows.Count; index++)
@@ -217,7 +260,7 @@ namespace ODBCClient
 
         private string getColumsNames()
         {
-            return "select COLUMN_NAME from " + odbcCon.Database + ".INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = '"+cmbTable.SelectedItem+"'";
+            return "select COLUMN_NAME from " + odbcCon.Database + ".INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = '" + cmbTable.SelectedItem + "'";
         }
 
         private string getQuary()
