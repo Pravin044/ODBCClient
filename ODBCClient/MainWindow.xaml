@@ -48,7 +48,7 @@
                 <RowDefinition MaxHeight="55px" Height="1.5*"/>
                 <RowDefinition Height="8*"/>
             </Grid.RowDefinitions>
-            <Border x:Name="brAccess" Visibility="Visible" BorderBrush="Black" BorderThickness="1px">
+            <Border x:Name="brAccess" Visibility="Collapsed" BorderBrush="Black" BorderThickness="1px">
                 <Grid Grid.Row="0" Width="750px" HorizontalAlignment="Left">
                     <Grid.RowDefinitions>
                         <RowDefinition MaxHeight="25px"/>
@@ -72,11 +72,11 @@
                     <Label x:Name="lblStore" Grid.Row="0" Grid.Column="1" Content="Select Store Procedure" Visibility="Collapsed"  HorizontalAlignment="Center"/>
                     <ComboBox x:Name="cmbTable" Grid.Row="1" Grid.Column="1"  Margin="2"/>
                     <TextBox x:Name="txtQuary" Grid.Row="1" Grid.Column="1" Visibility="Collapsed" Margin="2"/>
-                    <Label Content="Enable grouping" Grid.Column="2" Grid.Row="0"/>
+                    <!--<Label Content="Enable grouping" Grid.Column="2" Grid.Row="0"/>
                     <ComboBox x:Name="cmbEnableGrp" Grid.Column="2" Grid.Row="1">
                         <ComboBoxItem IsSelected="True">Enable</ComboBoxItem>
                         <ComboBoxItem>Disable</ComboBoxItem>
-                    </ComboBox>
+                    </ComboBox>-->
                     <Button x:Name="btnGetData" Grid.Row="1" Grid.Column="3" Content="Get Data" Click="btnGetData_Click" Margin="2"/>
                 </Grid>
             </Border>

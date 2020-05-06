@@ -41,7 +41,7 @@ namespace ODBCClient
             {
                 if (btnConnect.Content.ToString().ToLower() == "connect")
                 {
-                    odbcCon = new OdbcConnection("DSN=" + cmbDSNList.SelectedItem + ";Trusted_Connection=True;USER=" + txtUser.Text + ";PASSWORD=" + txtPassword.Password);
+                    odbcCon = new OdbcConnection("DSN="+ cmbDSNList.SelectedItem+";Uid="+txtUser.Text+";Pwd="+txtPassword.Password);
                     odbcCon.Open();
                     if (odbcCon.State.ToString() == "Open")
                     {
@@ -145,10 +145,10 @@ namespace ODBCClient
                     OdbcData = new OdbcDataAdapter(qaury, odbcCon);
                     OdbcData.Fill(dataSet);
 
-                    if (cmbEnableGrp.SelectedIndex == 0)
+                   /// if (cmbEnableGrp.SelectedIndex == 0)
                         GetFixedTableGrupData(dataSet);
-                    else
-                        getFixedTableUnGrpData(dataSet);
+                    //else
+                      //  getFixedTableUnGrpData(dataSet);
                 }
                 //dataSet = new DataSet();
                 ////string qaury = getQuary();
@@ -179,43 +179,43 @@ namespace ODBCClient
 
         }
 
-        private void getFixedTableUnGrpData(DataSet dataSet)
-        {
-            try
-            {
-                for (int i = 0; i < dataSet.Tables[0].Rows.Count; i++)
-                {
-                    foreach (var childItem in dataSet.Tables[0].Rows[i].ItemArray)
-                    {
-                        TreeViewItem parentItem = new TreeViewItem();
-                        parentItem.Header = childItem + "_" + i;
-                        treeView.Items.Add(parentItem);
-                        DataSet dataSet1 = new DataSet();
-                        string Subqaury = "select " + childItem + " from " + cmbTable.SelectedItem;
-                        OdbcData = new OdbcDataAdapter(Subqaury, odbcCon);
-                        OdbcData.Fill(dataSet1);
-                        for (int index = 0; index < dataSet1.Tables[0].Rows.Count; index++)
-                        {
-                            foreach (var item in dataSet1.Tables[0].Rows[index].ItemArray)
-                            {
+        //private void getFixedTableUnGrpData(DataSet dataSet)
+        //{
+        //    try
+        //    {
+        //        for (int i = 0; i < dataSet.Tables[0].Rows.Count; i++)
+        //        {
+        //            foreach (var childItem in dataSet.Tables[0].Rows[i].ItemArray)
+        //            {
+        //                TreeViewItem parentItem = new TreeViewItem();
+        //                parentItem.Header = childItem + "_" + i;
+        //                treeView.Items.Add(parentItem);
+        //                DataSet dataSet1 = new DataSet();
+        //                string Subqaury = "select " + childItem + " from " + cmbTable.SelectedItem;
+        //                OdbcData = new OdbcDataAdapter(Subqaury, odbcCon);
+        //                OdbcData.Fill(dataSet1);
+        //                for (int index = 0; index < dataSet1.Tables[0].Rows.Count; index++)
+        //                {
+        //                    foreach (var item in dataSet1.Tables[0].Rows[index].ItemArray)
+        //                    {
 
-                                TreeViewItem treeChildItem = new TreeViewItem();
-                                treeChildItem.Header = item;
-                                parentItem.Items.Add(item);
-
-
-                            }
-                        }
+        //                        TreeViewItem treeChildItem = new TreeViewItem();
+        //                        treeChildItem.Header = item;
+        //                        parentItem.Items.Add(item);
 
 
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
+        //                    }
+        //                }
+
+
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex.Message);
+        //    }
+        //}
 
         private void GetFixedTableGrupData(DataSet dataSet)
         {
