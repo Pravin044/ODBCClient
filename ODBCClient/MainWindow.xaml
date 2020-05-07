@@ -70,13 +70,15 @@
                     <Label x:Name="lblTable" Grid.Row="0" Grid.Column="1" Content="Table Select"  HorizontalAlignment="Center"/>
                     <Label x:Name="lblQuary" Grid.Row="0" Grid.Column="1" Content="Quary" Visibility="Collapsed"  HorizontalAlignment="Center"/>
                     <Label x:Name="lblStore" Grid.Row="0" Grid.Column="1" Content="Select Store Procedure" Visibility="Collapsed"  HorizontalAlignment="Center"/>
-                    <ComboBox x:Name="cmbTable" Grid.Row="1" Grid.Column="1"  Margin="2"/>
+                    <ComboBox x:Name="cmbTable" Grid.Row="1" Grid.Column="1"  Margin="2" SelectionChanged="cmbTable_SelectionChanged"/>
                     <TextBox x:Name="txtQuary" Grid.Row="1" Grid.Column="1" Visibility="Collapsed" Margin="2"/>
                     <!--<Label Content="Enable grouping" Grid.Column="2" Grid.Row="0"/>
                     <ComboBox x:Name="cmbEnableGrp" Grid.Column="2" Grid.Row="1">
                         <ComboBoxItem IsSelected="True">Enable</ComboBoxItem>
                         <ComboBoxItem>Disable</ComboBoxItem>
                     </ComboBox>-->
+                    <Label Content="Record Limit" Grid.Row="0" Grid.Column="2"/>
+                    <TextBox x:Name="txtRecordLimit" Grid.Row="1" Grid.Column="2" Margin="2"/>
                     <Button x:Name="btnGetData" Grid.Row="1" Grid.Column="3" Content="Get Data" Click="btnGetData_Click" Margin="2"/>
                 </Grid>
             </Border>

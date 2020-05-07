@@ -27,6 +27,7 @@ namespace ODBCClient
         OdbcConnection odbcCon;
         OdbcDataAdapter OdbcData;
         DataSet dataSet;
+        int ReocrdLimit;
         public MainWindow()
         {
             InitializeComponent();
@@ -221,34 +222,40 @@ namespace ODBCClient
         {
             try
             {
-                
-                for (int i = 0; i < dataSet.Tables[0].Rows.Count; i++)
+                if (ReocrdLimit >= Convert.ToInt32(txtRecordLimit.Text))
                 {
-                    foreach (var childItem in dataSet.Tables[0].Rows[i].ItemArray)
+                    for (int i = 0; i < dataSet.Tables[0].Rows.Count; i++)
                     {
-                        TreeViewItem parentItem = new TreeViewItem();
-                        parentItem.Header = childItem;
-                        treeView.Items.Add(parentItem);
-                        DataSet dataSet1 = new DataSet();
-                        string Subqaury = "select " + childItem + " from " + cmbTable.SelectedItem;
-                        OdbcData = new OdbcDataAdapter(Subqaury, odbcCon);
-                        OdbcData.Fill(dataSet1);
-                        for (int index = 0; index < dataSet1.Tables[0].Rows.Count; index++)
+                        foreach (var childItem in dataSet.Tables[0].Rows[i].ItemArray)
                         {
-                            foreach (var item in dataSet1.Tables[0].Rows[index].ItemArray)
+                            TreeViewItem parentItem = new TreeViewItem();
+                            parentItem.Header = childItem;
+                            treeView.Items.Add(parentItem);
+                            DataSet dataSet1 = new DataSet();
+                            string Subqaury = "select TOP("+ Convert.ToInt16(txtRecordLimit.Text)+") " + childItem + " from " + cmbTable.SelectedItem;
+                            OdbcData = new OdbcDataAdapter(Subqaury, odbcCon);
+                            OdbcData.Fill(dataSet1);
+                            for (int index = 0; index < dataSet1.Tables[0].Rows.Count; index++)
                             {
+                                foreach (var item in dataSet1.Tables[0].Rows[index].ItemArray)
+                                {
 
-                                TreeViewItem treeChildItem = new TreeViewItem();
-                                treeChildItem.Header = item;
-                                parentItem.Items.Add(item);
+                                    TreeViewItem treeChildItem = new TreeViewItem();
+                                    treeChildItem.Header = item;
+                                    parentItem.Items.Add(item);
 
 
+                                }
                             }
+
+
                         }
 
-
                     }
-
+                }
+                else
+                {
+                    MessageBox.Show("Please enter Record limit below" + ReocrdLimit);
                 }
             }
             catch (Exception ex)
@@ -353,6 +360,26 @@ namespace ODBCClient
         {
             txtUser.Text = null;
             txtPassword.Password = null;
+        }
+
+        private void cmbTable_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                if (odbcCon.State.ToString() == "Open")
+                {
+                    dataSet = new DataSet();
+                    OdbcData = new OdbcDataAdapter("SELECT count(*) FROM " + cmbTable.SelectedItem, odbcCon);
+                    OdbcData.Fill(dataSet);
+                   ReocrdLimit=Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[0]);
+                    txtRecordLimit.Text = ReocrdLimit.ToString();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }
