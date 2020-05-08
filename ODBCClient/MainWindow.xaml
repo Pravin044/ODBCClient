@@ -83,7 +83,11 @@
                 </Grid>
             </Border>
             <Grid Grid.Row="1">
-                <TreeView x:Name="treeView"></TreeView>
+                <!--<TreeView x:Name="treeView"></TreeView>--><DataGrid />
+                <DataGrid x:Name="dataGridView" >
+                 
+                </DataGrid>
+
             </Grid>
         </Grid>
       </Grid>

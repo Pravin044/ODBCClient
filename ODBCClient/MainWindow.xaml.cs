@@ -27,7 +27,7 @@ namespace ODBCClient
         OdbcConnection odbcCon;
         OdbcDataAdapter OdbcData;
         DataSet dataSet;
-        int ReocrdLimit;
+        int RecordLimit;
         public MainWindow()
         {
             InitializeComponent();
@@ -42,7 +42,7 @@ namespace ODBCClient
             {
                 if (btnConnect.Content.ToString().ToLower() == "connect")
                 {
-                    odbcCon = new OdbcConnection("DSN="+ cmbDSNList.SelectedItem+";Uid="+txtUser.Text+";Pwd="+txtPassword.Password);
+                    odbcCon = new OdbcConnection("DSN=" + cmbDSNList.SelectedItem + ";Uid=" + txtUser.Text + ";Pwd=" + txtPassword.Password);
                     odbcCon.Open();
                     if (odbcCon.State.ToString() == "Open")
                     {
@@ -138,7 +138,7 @@ namespace ODBCClient
         {
             try
             {
-                treeView.Items.Clear();
+                //treeView.Items.Clear();
                 if (cmbAccessMethod.SelectedIndex == 0)
                 {
                     dataSet = new DataSet();
@@ -146,10 +146,11 @@ namespace ODBCClient
                     OdbcData = new OdbcDataAdapter(qaury, odbcCon);
                     OdbcData.Fill(dataSet);
 
-                   /// if (cmbEnableGrp.SelectedIndex == 0)
-                        GetFixedTableGrupData(dataSet);
+                    /// if (cmbEnableGrp.SelectedIndex == 0)
+                    // GetFixedTableGrupData(dataSet);
+                    getTable(dataSet);
                     //else
-                      //  getFixedTableUnGrpData(dataSet);
+                    //  getFixedTableUnGrpData(dataSet);
                 }
                 //dataSet = new DataSet();
                 ////string qaury = getQuary();
@@ -171,7 +172,7 @@ namespace ODBCClient
                 //}
 
 
-            }
+            //}
             catch (Exception ex)
             {
 
@@ -218,11 +219,24 @@ namespace ODBCClient
         //    }
         //}
 
+        private void getTable(DataSet dataSet)
+        {
+            DataTable dt = new DataTable();
+           
+                    string Subqaury = "select TOP(" + Convert.ToInt16(txtRecordLimit.Text) + ") * from " + cmbTable.SelectedItem;
+                    OdbcData = new OdbcDataAdapter(Subqaury, odbcCon);
+                    OdbcData.Fill(dt);
+                   
+            
+            
+            dataGridView.ItemsSource = dt.DefaultView;
+        }
+
         private void GetFixedTableGrupData(DataSet dataSet)
         {
             try
             {
-                if (ReocrdLimit >= Convert.ToInt32(txtRecordLimit.Text))
+                if (RecordLimit >= Convert.ToInt32(txtRecordLimit.Text))
                 {
                     for (int i = 0; i < dataSet.Tables[0].Rows.Count; i++)
                     {
@@ -230,9 +244,9 @@ namespace ODBCClient
                         {
                             TreeViewItem parentItem = new TreeViewItem();
                             parentItem.Header = childItem;
-                            treeView.Items.Add(parentItem);
+                            // treeView.Items.Add(parentItem);
                             DataSet dataSet1 = new DataSet();
-                            string Subqaury = "select TOP("+ Convert.ToInt16(txtRecordLimit.Text)+") " + childItem + " from " + cmbTable.SelectedItem;
+                            string Subqaury = "select TOP(" + Convert.ToInt16(txtRecordLimit.Text) + ") " + childItem + " from " + cmbTable.SelectedItem;
                             OdbcData = new OdbcDataAdapter(Subqaury, odbcCon);
                             OdbcData.Fill(dataSet1);
                             for (int index = 0; index < dataSet1.Tables[0].Rows.Count; index++)
@@ -255,7 +269,7 @@ namespace ODBCClient
                 }
                 else
                 {
-                    MessageBox.Show("Please enter Record limit below" + ReocrdLimit);
+                    MessageBox.Show("Please enter Record limit below" + RecordLimit);
                 }
             }
             catch (Exception ex)
@@ -288,7 +302,7 @@ namespace ODBCClient
             cmbAccessMethod.SelectedIndex = -1;
             cmbTable.SelectedIndex = -1;
             txtQuary.Text = null;
-            treeView.Items.Clear();
+            //treeView.Items.Clear();
         }
 
 
@@ -371,8 +385,8 @@ namespace ODBCClient
                     dataSet = new DataSet();
                     OdbcData = new OdbcDataAdapter("SELECT count(*) FROM " + cmbTable.SelectedItem, odbcCon);
                     OdbcData.Fill(dataSet);
-                   ReocrdLimit=Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[0]);
-                    txtRecordLimit.Text = ReocrdLimit.ToString();
+                    RecordLimit = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[0]);
+                    txtRecordLimit.Text = RecordLimit.ToString();
                 }
             }
             catch (Exception)
