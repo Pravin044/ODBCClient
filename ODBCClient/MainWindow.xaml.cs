@@ -172,7 +172,7 @@ namespace ODBCClient
                 //}
 
 
-            //}
+            }
             catch (Exception ex)
             {
 
@@ -355,11 +355,11 @@ namespace ODBCClient
                 if (odbcCon.State.ToString() == "Open")
                 {
                     dataSet = new DataSet();
-                    OdbcData = new OdbcDataAdapter("SELECT * FROM " + odbcCon.Database + ".INFORMATION_SCHEMA.TABLES", odbcCon);
+                    OdbcData = new OdbcDataAdapter("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES", odbcCon);
                     OdbcData.Fill(dataSet);
                     for (int i = 0; i < dataSet.Tables[0].Rows.Count; i++)
                     {
-                        cmbTable.Items.Add(dataSet.Tables[0].Rows[i].ItemArray[2]);
+                        cmbTable.Items.Add(dataSet.Tables[0].Rows[i].ItemArray[0]);
                     }
                 }
             }
@@ -383,16 +383,16 @@ namespace ODBCClient
                 if (odbcCon.State.ToString() == "Open")
                 {
                     dataSet = new DataSet();
-                    OdbcData = new OdbcDataAdapter("SELECT count(*) FROM " + cmbTable.SelectedItem, odbcCon);
+                    OdbcData = new OdbcDataAdapter("SELECT count(*) from " + cmbTable.SelectedItem, odbcCon);
                     OdbcData.Fill(dataSet);
                     RecordLimit = Convert.ToInt32(dataSet.Tables[0].Rows[0].ItemArray[0]);
                     txtRecordLimit.Text = RecordLimit.ToString();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                //throw;
             }
         }
     }
