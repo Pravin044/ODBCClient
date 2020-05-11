@@ -8,10 +8,19 @@
         Title="MainWindow" MinHeight="450" MinWidth="800">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition />
             <RowDefinition MaxHeight="55px" Height="1*"/>
             <RowDefinition Height="7*"/>
         </Grid.RowDefinitions>
-        <Border BorderBrush="Black" BorderThickness="1px" >
+        <Grid Grid.Row="0">
+            <Button x:Name="btnConfig" Background="Transparent" HorizontalAlignment="Left" Click="btnConfig_Click">
+                <Button.Content>
+                    <Image Source="/images/odbcIcon_1.png" />
+                </Button.Content>
+            </Button>
+        </Grid>
+        
+        <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1px" >
             <Grid Width="750px" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*"/>
@@ -43,7 +52,7 @@
             </Grid>
         </Border>
        
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="2">
             <Grid.RowDefinitions>
                 <RowDefinition MaxHeight="55px" Height="1.5*"/>
                 <RowDefinition Height="8*"/>

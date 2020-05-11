@@ -395,5 +395,13 @@ namespace ODBCClient
                 //throw;
             }
         }
+
+        private void btnConfig_Click(object sender, RoutedEventArgs e)
+        {
+            var win = new ConfigWizard();
+            win.ShowDialog();
+            if (!string.IsNullOrEmpty(win.FirstNameTextBox.Text))
+                MessageBox.Show("Hello " + win.FirstNameTextBox.Text + "!");
+        }
     }
 }
