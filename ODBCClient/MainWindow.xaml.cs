@@ -400,8 +400,7 @@ namespace ODBCClient
         {
             var win = new ConfigWizard();
             win.ShowDialog();
-            if (!string.IsNullOrEmpty(win.FirstNameTextBox.Text))
-                MessageBox.Show("Hello " + win.FirstNameTextBox.Text + "!");
+            Console.WriteLine(win);
         }
     }
 }

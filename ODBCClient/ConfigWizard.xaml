@@ -13,10 +13,47 @@
                                    Title="Welcome to Configuration"
                                    Description="This Wizard will walk you though database configuration." />
             <xctk:WizardPage x:Name="Page1" PageType="Interior"
-                                   Title="Page 1"
-                                   Description="This is the first page in the process."
-                                   NextPage="{Binding ElementName=Page2}"
+                                   Title="Data Source Name (DSN) Configuration"
+                                   NextPage="{Binding ElementName=Page2}" 
                                    PreviousPage="{Binding ElementName=IntroPage}"
+                             CanSelectNextPage="False">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Content="Data Source Name:" HorizontalAlignment="Left"/>
+                        <Grid Grid.Row="1" HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="4*"/>
+                                <ColumnDefinition Width="0.5*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox x:Name="cmbDSNList" Grid.Column="0" Margin="2" SelectionChanged="cmbDSNList_SelectionChanged"/>
+                            <Button x:Name="btnODBCDataSource" Grid.Column="1" Margin="2" Content="..." Click="btnODBCDataSource_Click"/>
+                        </Grid>
+
+                        <Label Content="UserName:" Grid.Row="2"  HorizontalAlignment="Left" />
+                        <TextBox x:Name="txtUser" Grid.Row="3"  Margin="2" TextChanged="txtUser_TextChanged"/>
+                        <Label Content="Password" Grid.Row="4" HorizontalAlignment="Left"/>
+                        <PasswordBox x:Name="txtPassword"  Grid.Row="5"   Margin="2" PasswordChanged="txtPassword_PasswordChanged"/>
+
+                    </Grid>
+                </Grid>
+            </xctk:WizardPage>
+            <xctk:WizardPage x:Name="Page2" PageType="Interior"
+                                   Title="Page 1"
+                                   Description="This is the second page in the process."
+                                   NextPage="{Binding ElementName=Page2}"
+                                   PreviousPage="{Binding ElementName=Page1}"
                              CanSelectNextPage="False">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -29,16 +66,30 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <TextBlock Text="First Name:"/>
-                    <TextBox Grid.Column="2" Name="FirstNameTextBox" TextChanged="FirstNameTextBox_TextChanged"/>
+                
                 </Grid>
             </xctk:WizardPage>
-            <xctk:WizardPage x:Name="Page2" PageType="Interior"
-                                   Title="Page 2"
-                                   Description="This is the second page in the process"/>
-            <xctk:WizardPage x:Name="LastPage" PageType="Interior"
-                                   Title="Last Page"
-                                   Description="This is the last page in the process"
-                                   CanFinish="True"/>
+            <xctk:WizardPage x:Name="Page3" PageType="Interior"
+                                   Title="Page 1"
+                                   Description="This is the third page in the process."
+                                   FinishButtonVisibility="Visible"
+                                   PreviousPage="{Binding ElementName=Page2}"
+                             CanSelectNextPage="False">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="5px"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="First Name:"/>
+
+                </Grid>
+            </xctk:WizardPage>
+
         </xctk:Wizard>
     </Grid>
 </Window>
