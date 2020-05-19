@@ -402,5 +402,10 @@ namespace ODBCClient
             win.ShowDialog();
             Console.WriteLine(win);
         }
+
+        private void dataGridView_Selected(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
